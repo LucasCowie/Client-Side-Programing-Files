@@ -52,4 +52,6 @@ function primeFinder(lenght=10,min=1,max=50){
     https://www.w3schools.com/js/js_if_ternary.asp
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator
     Help my understand for the last logic statement
-*/
+
+    Finished Program 4 to my satifaction
+ */
