@@ -15,3 +15,7 @@ function letterswap(str){
 }
 
 letterswap("Defualt"); //Use the word Deafault on first run
+/*
+    https://www.w3schools.com/js/js_string_methods.asp#mark_split
+    help for easy removal of the first and last char
+*/
