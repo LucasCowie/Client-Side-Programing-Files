@@ -3,7 +3,7 @@
 function letterswap(str){
     let finalstr = "";
     //Checks if the first and last char of the string are the same
-    if (str.length[0] == str.length -1){
+    if (str[0].toUpperCase() == str[str.length -1].toUpperCase()){
         //If the first and last char are the same loop through the string and reverse it
         for(let i = str.length-1;i>=0;i--){
             finalstr = finalstr + str[i];
@@ -14,7 +14,7 @@ function letterswap(str){
     console.log(finalstr); //prints the results to the console
 }
 
-letterswap("Defualt"); //Use the word Deafault on first run
+letterswap("Deafult"); //Use the word Deafault on first run
 /*
     https://www.w3schools.com/js/js_string_methods.asp#mark_split
     help for easy removal of the first and last char

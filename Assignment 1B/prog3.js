@@ -22,7 +22,7 @@ function nextBirthCal(month = 5, day=17){
     //outputs the time till the next birth date
     console.log(`There are ${weeksRemaining} Weeks, ${dayRemaining} Days, ${hourRemaining} Hours, ${minRemaining} Minutes, and ${secRemaining} Seconds until your birthday!`);
 }
-nextBirthCal(1,5);
+nextBirthCal();
 /*
     https://www.timeanddate.com/date/durationresult.html?m1=1&d1=9&y1=2026&m2=01&d2=05&y2=2027
     Use for checking accurcy

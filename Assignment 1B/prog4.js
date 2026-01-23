@@ -44,6 +44,7 @@ function primeFinder(lenght=10,min=1,max=50){
     console.log(randomArray);
     console.log(primeArray);
 }
+primeFinder();
 
 /*
     https://brilliant.org/wiki/prime-numbers/
