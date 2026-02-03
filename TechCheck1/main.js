@@ -28,8 +28,8 @@ function convertPhoneWord(phoneWord) {
     }
     var phoneWordSafe = phoneWord; //dont want to play with the given string so we give it a safe
     result1 = phoneWordSafe.replace(/[^a-zA-Z0-9]/g, ""); //Keeps all lowercase a-z, keeps all uppercase A-Z, keeps all numbers 0-9
-    resultFinale = result1.replace(/[a-z]/g, function (c) { //Takes all lowercase a-z, puts them through a fuction to make em uppercase
-        return c.toUpperCase();}); 
+    resultFinale = result1.replace(/[a-z]/g, function (char) { //Takes all lowercase a-z, puts them through a fuction to make em uppercase
+        return char.toUpperCase();}); 
 
     for(i=0;i<buttons.length;i++){ //for the number keypad nums
         var rmChar = new RegExp("["+buttons[i].toUpperCase()+"]", "g") //creates an uppercase index of what letters need to be replaced with number
