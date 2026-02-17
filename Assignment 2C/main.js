@@ -18,6 +18,7 @@ async function drawFive(deck) {
     try {
         const url = `https://deckofcardsapi.com/api/deck/${deck}/draw/?count=5`;
         //const url = "https://prog2700.onrender.com/pokerhandtest/royalflush" //test case for certain hands (add more from links given)
+        //const url = "https://prog2700.onrender.com/pokerhandtest/fullhouse" //test case for certain hands (add more from links given)
         const response = await fetch(url)
         responseCheck(response); //responce error handing
         const data = await response.json();
@@ -27,134 +28,110 @@ async function drawFive(deck) {
         console.log(error)
     }
 }
-//let deckID = await getDeckID();
-//console.log(deckID);
-//let five = await drawFive(deckID);
-//five = five.cards
-// V | should be the same as te array here
-let fiveCards = ["0S","0S","JS","3S","3S"] //offline
-
 //sort cards highest to lowest
 //sorts the cards from highest to lowest value in poker
 function sortCards(cards){
     let cardArraySort = [];
+    
+    const rankOrder = { //define how to sort
+        '2': 2,'3': 3,'4': 4,'5': 5,
+        '6': 6,'7': 7,'8': 8,'9': 9,
+        '0': 10,'J': 11,'Q': 12,'K': 13,'A': 14
+    };
     try{
-        const rankOrder = { //define how to sort
-            '2': 2,'3': 3,'4': 4,'5': 5,
-            '6': 6,'7': 7,'8': 8,'9': 9,
-            '0': 10,'J': 11,'Q': 12,'K': 13,'A': 14
-        };
         for(let i=0;i<5;i++){ //make array
-            cardArraySort.push(cards[i]);
-            //cards[i].code ---------^
+            let code = cards[i].code; //get the card code
+            let rankChar = code[0];     //get card value
+            let suit = code[1];        // get card suit
+            let value = rankOrder[rankChar]; //replace card value with numeric value
+
+            // store numeric value + suit
+            cardArraySort.push([value, suit]);
         }
-        cardArraySort.sort((a, b) => { //sort cards
-            const rankA = rankOrder[a[0]];
-            const rankB = rankOrder[b[0]];
-            return rankA - rankB;
-        });
+        cardArraySort.sort((a,b)=>a[0]-b[0]); //sorts cards highest to lowest
     }catch(error){
         console.log(error)
     }
     return cardArraySort;
 }
-
-fiveCards = sortCards(fiveCards); //needs to be pasted "five.cards"
-console.log(fiveCards)
 //splits the cards into two array for suits and num
 //combine those array to be able to called from a single array
-//probably could write this section better
 function split(cards){
-    let cardArray = [[]];
-    let suitArray = [];
-    let numArray = [];
-    try{
-        for(let i=0;i<5;i++){
-            //cardArray[0].push(five.cards[i].code.split(""))
-            cardArray[0].push(cards[i].split("")) //offline
-        }
-        for(let i=0;i<cardArray[0].length;i++){
-            numArray.push(cardArray[0][i][0])
-            suitArray.push(cardArray[0][i][1])
-        }
-    }catch(error){
-        console.log(error)
-    }
-    //assign
-    cardArray = [];
-    cardArray = [[numArray],[suitArray]];
-    //log out
-    console.log(suitArray);
-    console.log(numArray);
-    console.log(cardArray);
-    //return
-    return cardArray;
+    let numArray = cards.map(c => c[0]); //takes card value into an array
+    let suitArray = cards.map(c => c[1]); //takes card suit into an array
+    return [numArray, suitArray];
 }
-let cardArray = split(fiveCards)
-//check for pairs up till 4
-function determinePairs(numArray){
-    let pairArray = [];
-    let pairSaved = [];
-    for(let i=0;i<5;i++){
-        if(numArray[i] == numArray[i+1]){
-            if(numArray[i]==numArray[i+1]&&numArray[i+1]==numArray[i+2]){
-                if(numArray[i]==numArray[i+1]
-                    &&numArray[i+1]==numArray[i+2]
-                    &&numArray[i+2]==numArray[i+3]){
-                    pairArray.push("4 of a kind: "+numArray[i])
-                    console.log(pairArray)
-                    return 4;
-                }
-                pairArray.push("3 of a kind: "+numArray[i])
-                console.log(pairArray)
-                return 3;
-                
-            }
-            pairSaved.push(numArray[i]);
-        }
-    }
-    if(sumCards(pairSaved[0]) > sumCards(pairSaved[1])){
-        pairArray.push("2 of a kind: "+pairSaved[0])
-        console.log(pairArray)
-        return 2;
-    }else{
-        pairArray.push("2 of a kind: "+pairSaved[1])
-        console.log(pairArray)
-        return 1;
-    }
-}
-let pair = determinePairs(cardArray[0][0]);
-console.log(pair);
-//if pairs cant be flush or royal flush so no need to check
-//only check for full house at this point, might add to pair function
-if(pair > 0){
+function determineDups(numArray){
+    let counts = {};
 
-}else{
-    const allSame = suitArray.every(element => element === suitArray[0])
-    if(allSame){
-        console.log("same")
+    // Count the occurrences of each item
+    numArray.forEach(item => {
+        // If the item exists as a key, increment its value; otherwise, set it to 1
+        counts[item] = (counts[item] || 0) + 1;
+    });
+    //make and object and store occor value
+    const values = Object.values(counts).sort((a,b)=>b-a);
+    //retrun hand value
+    if (values[0] === 4){
+        console.log("four of a kind")
+        return 3; // four of a kind
+    } 
+    if (values[0] === 3 && values[1] === 2){
+        console.log("full house")
+        return 4; // full house
+    }
+    if (values[0] === 3) {
+        console.log("three")
+        return 7; // three
+    }
+    if (values[0] === 2 && values[1] === 2){ 
+        console.log("two pair")
+        return 8; // two pair
+    }
+    if (values[0] === 2){ 
+        console.log("pair")
+        return 9; // pair
+    }else{
+        return 0;
     }
 }
+//final check and determines outcome
+function determineLogic(cardArray){
+    let suitArray = cardArray[1]; //deconstruct suit array
+    let numArray = cardArray[0]; //deconstruct value array
+
+    let rank = determineDups(cardArray[0]); //gets pair ranks
+
+    const straight = numArray.every((v,i)=> i===0 || v===numArray[i-1]+1); //just to see if number all inc
+    const flush = suitArray.every(s => s === suitArray[0]); //check to see if all the same suit
+    if(rank === 0){ //if no pairs
+        if (flush && straight) { //if num inc and all the same suit
+            if (JSON.stringify(numArray) === JSON.stringify([10,11,12,13,14])) { //if equal to royal flush
+                rank = 1;
+                console.log("royal flush");
+            } else { //else its straight flush
+                rank = 2;
+                console.log("straight flush");
+            }
+        } else if (flush) { // nums dont match but suit are same
+            rank = 5;
+            console.log("flush");
+        } else if (straight) { //suit dont match but num inc
+            rank = 6;
+            console.log("straight");
+        } else {
+            rank = 10;
+            console.log("high card");
+        }
+    }
+}
+let deckID = await getDeckID();
+let five = await drawFive(deckID);
+determineLogic(split(sortCards(five.cards)));
 //helper functions
-function sumCards(card){
-    switch(card){
-        case 2-9:
-            return card;
-        case 0:
-            return 10;
-        case "J":
-            return 11;
-        case "Q":
-            return 12; 
-        case "K":
-            return 13;  
-        case "A":
-            return 14; 
-    }
-}
 function responseCheck(res){
     if(!res.ok){
-        throw new Error("Response Error: "+response.status);
+        throw new Error("Response Error: "+res.status);
     }
 }
 /*
