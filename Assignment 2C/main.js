@@ -1,3 +1,4 @@
+import { display, showMessage, setButtonEnabled } from "./display.js";
 //get a new deck
 //gets called when page refereshs
 async function getDeckID(){
@@ -124,10 +125,30 @@ function determineLogic(cardArray){
             console.log("high card");
         }
     }
+    return rank;
 }
 let deckID = await getDeckID();
-let five = await drawFive(deckID);
-determineLogic(split(sortCards(five.cards)));
+async function drawAndDisplay() {
+    setButtonEnabled(false);
+    let five = await drawFive(deckID);
+    
+    if (!five.success || five.remaining < 5) {
+        showMessage("Shuffling new deck...");
+        await new Promise(r => setTimeout(r, 1000));
+        deckID = await getDeckID();
+        five = await drawFive(deckID);
+    }
+    let cardArray = split(sortCards(five.cards));
+
+    let rank = determineLogic(cardArray);
+
+    display(rank, five.cards);
+    setButtonEnabled(true);
+}
+drawAndDisplay();
+document.getElementById("drawBtn").addEventListener("click", drawAndDisplay);
+
+
 //helper functions
 function responseCheck(res){
     if(!res.ok){
