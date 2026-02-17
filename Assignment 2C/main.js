@@ -40,7 +40,7 @@ function sortCards(cards){
         '0': 10,'J': 11,'Q': 12,'K': 13,'A': 14
     };
     try{
-        for(let i=0;i<5;i++){ //make array
+        for(let i=0;i<cards.length;i++){ //loop over the five drawn cards
             let code = cards[i].code; //get the card code
             let rankChar = code[0];     //get card value
             let suit = code[1];        // get card suit
