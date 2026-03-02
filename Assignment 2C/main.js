@@ -53,13 +53,15 @@ function sortCards(cards){
     }catch(error){
         console.log(error)
     }
+    console.log(cardArraySort)
     return cardArraySort;
 }
 //splits the cards into two array for suits and num
 //combine those array to be able to called from a single array
 function split(cards){
     let numArray = cards.map(c => c[0]); //takes card value into an array
-    let suitArray = cards.map(c => c[1]); //takes card suit into an array
+    let suitArray = cards.map(c => c[1]);
+    console.log(numArray,suitArray) //takes card suit into an array
     return [numArray, suitArray];
 }
 function determineDups(numArray){
@@ -70,8 +72,10 @@ function determineDups(numArray){
         // If the item exists as a key, increment its value; otherwise, set it to 1
         counts[item] = (counts[item] || 0) + 1;
     });
+    console.log(counts)
     //make and object and store occor value
-    const values = Object.values(counts).sort((a,b)=>b-a);
+    let values = Object.values(counts).sort((a,b)=>b-a);
+    console.log(values)
     //retrun hand value
     if (values[0] === 4){
         console.log("four of a kind")
@@ -98,13 +102,13 @@ function determineDups(numArray){
 }
 //final check and determines outcome
 function determineLogic(cardArray){
-    let suitArray = cardArray[1]; //deconstruct suit array
-    let numArray = cardArray[0]; //deconstruct value array
+    const suitArray = cardArray[1]; //deconstruct suit array
+    const numArray = cardArray[0]; //deconstruct value array
 
     let rank = determineDups(cardArray[0]); //gets pair ranks
 
-    const straight = numArray.every((v,i)=> i===0 || v===numArray[i-1]+1); //just to see if number all inc
-    const flush = suitArray.every(s => s === suitArray[0]); //check to see if all the same suit
+    let straight = numArray.every((v,i)=> i===0 || v===numArray[i-1]+1); //just to see if number all inc
+    let flush = suitArray.every(s => s === suitArray[0]); //check to see if all the same suit
     if(rank === 0){ //if no pairs
         if (flush && straight) { //if num inc and all the same suit
             if (JSON.stringify(numArray) === JSON.stringify([10,11,12,13,14])) { //if equal to royal flush
