@@ -1,0 +1,211 @@
+/* ── Reset & base ───────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #e8edf3;
+  min-height: 100vh;
+  padding: 24px 16px;
+  color: #333;
+}
+
+/* ── Game wrapper ────────────────────────────────────────────────────────────── */
+#theGame {
+  max-width: 680px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.12);
+  padding: 28px 32px 36px;
+}
+
+/* ── Title ───────────────────────────────────────────────────────────────────── */
+h1 {
+  font-size: 1.9rem;
+  font-weight: 700;
+  text-align: center;
+  color: #1a237e;
+  letter-spacing: .5px;
+  margin-bottom: 8px;
+}
+
+/* ── Rules reminder ──────────────────────────────────────────────────────────── */
+#rulesText {
+  font-size: .82rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* ── Controls bar ────────────────────────────────────────────────────────────── */
+#controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.control-group label {
+  font-size: .88rem;
+  color: #444;
+  cursor: pointer;
+  user-select: none;
+}
+
+select {
+  padding: 5px 8px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: .88rem;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────────── */
+button {
+  padding: 7px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+}
+
+button:active { transform: scale(.97); }
+
+#checkBtn { background: #1565c0; color: #fff; }
+#checkBtn:hover { background: #0d47a1; }
+
+#resetBtn { background: #546e7a; color: #fff; }
+#resetBtn:hover { background: #37474f; }
+
+#hintBtn  { background: #f57c00; color: #fff; }
+#hintBtn:hover { background: #e65100; }
+#hintBtn:disabled { background: #bbb; cursor: default; }
+
+/* ── Info row: status + timer ────────────────────────────────────────────────── */
+#infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 36px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#statusMessage {
+  font-size: .95rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  min-width: 220px;
+}
+
+#statusMessage.error   { background: #ffebee; color: #b71c1c; }
+#statusMessage.ok      { background: #e8f5e9; color: #1b5e20; }
+#statusMessage.success { background: #e3f2fd; color: #0d47a1; font-size: 1.05rem; }
+
+#timer {
+  font-size: .92rem;
+  font-weight: 600;
+  color: #555;
+}
+
+/* ── Table container ─────────────────────────────────────────────────────────── */
+#tableContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* ── Puzzle table ────────────────────────────────────────────────────────────── */
+#puzzleTable {
+  border-collapse: collapse;
+  border: 3px solid #1a237e;
+}
+
+/* Each cell takes its size from the JS-computed CSS variable */
+#puzzleTable td {
+  width:  var(--cell-size, 40px);
+  height: var(--cell-size, 40px);
+  border: 1px solid #555;
+  transition: opacity .1s;
+}
+
+/* ── Cell states ─────────────────────────────────────────────────────────────── */
+.cell.empty  { background-color: #c5cae9; }   /* soft indigo-tint grey  */
+.cell.blue   { background-color: #1565c0; }   /* deep blue              */
+.cell.white  { background-color: #f5f5f5; }   /* near-white             */
+
+/* Locked cells: same colours but with a subtle diagonal pattern overlay */
+.cell.locked { cursor: not-allowed; }
+.cell.locked.empty {
+  background-color: #c5cae9;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0,0,0,.08) 0px, rgba(0,0,0,.08) 2px,
+    transparent 2px, transparent 8px
+  );
+}
+.cell.locked.blue {
+  background-color: #1a237e;   /* darker shade marks it as locked */
+}
+.cell.locked.white {
+  background-color: #e8eaf6;   /* lighter shade marks it as locked */
+  border: 2px solid #9fa8da;
+}
+
+/* Clickable (unlocked) cells get a pointer + hover feedback */
+.cell.clickable { cursor: pointer; }
+.cell.clickable:hover { opacity: .82; }
+
+/* Error highlight (red outline) */
+.cell.error {
+  outline: 3px solid #e53935;
+  outline-offset: -3px;
+}
+
+/* Hint flash (gold outline) */
+.cell.hinted {
+  outline: 3px solid #ffd600;
+  outline-offset: -3px;
+}
+
+/* ── Legend ──────────────────────────────────────────────────────────────────── */
+#legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .82rem;
+  color: #555;
+}
+
+/* Swatch: a tiny cell-sized square used in the legend */
+.swatch {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #555;
+  flex-shrink: 0;
+}
